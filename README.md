@@ -21,7 +21,7 @@ See [Apple Developer Program distribution](Docs/DISTRIBUTION.md) for TestFlight 
 
 ## Run on your devices
 
-Requirements: Xcode with the iOS SDK, an iPhone running iOS 17 or later, and a Mac running macOS 14 or later with Bluetooth LE peripheral support. The simulator can show the UI but cannot validate the Bluetooth connection.
+Requirements: Xcode with the iOS SDK, an iPhone running iOS 17 or later, and a Mac running macOS 13 or later with Bluetooth LE peripheral support. The simulator can show the UI but cannot validate the Bluetooth connection.
 
 1. Open `CouchRemote.xcodeproj` in Xcode. The generated project is included; no dependencies need to be downloaded.
 2. In **Signing & Capabilities**, select your development team for both targets. If needed, change the bundle identifiers to unique identifiers. You may use your personal team for local device testing subject to Apple's provisioning limits.
@@ -39,7 +39,7 @@ Keep `LSUIElement` set to `NO`. On the tested Mac, running as a UI agent caused 
 
 ### Mac installer for another computer
 
-Run `bash Scripts/PackageMac.sh` to create `dist/CouchRemote-macOS14-universal.dmg` with Intel and Apple Silicon executables. Open it on the destination Mac and drag CouchRemoteMac into Applications; Xcode is not needed there. macOS 14 or later and Bluetooth LE peripheral support are still required. This is an ad-hoc-signed personal test package, not a Developer ID notarized release, so macOS may block its first launch. The disk image includes installation instructions. Bluetooth and Accessibility permission must be granted on each Mac.
+Run `bash Scripts/PackageMac.sh` to create `dist/CouchRemote-macOS13-universal.dmg` with Intel and Apple Silicon executables. Open it on the destination Mac and drag CouchRemoteMac into Applications; Xcode is not needed there. macOS 13 or later and Bluetooth LE peripheral support are still required. This is an ad-hoc-signed personal test package, not a Developer ID notarized release, so macOS may block its first launch. The disk image includes installation instructions. Bluetooth and Accessibility permission must be granted on each Mac.
 
 The disk image does not install the iPhone app. TestFlight distribution requires an Apple Developer Program membership and App Store Connect setup; its builds expire after 90 days. The existing free Personal Team installation remains a development-only route.
 
@@ -79,3 +79,5 @@ Text entry uses Unicode keyboard events rather than clipboard access. Apps using
 - `Tests/`: protocol tests that run without paired devices.
 
 No input is logged or persisted. The Mac app is intentionally not sandboxed because it posts system-wide input events; this is a local development build, not a notarized distribution or an App Store submission.
+
+Ventura compatibility update: the Mac deployment target is macOS 13.0, and both Intel and Apple Silicon binaries were rebuilt and checked. Actual execution on a Ventura Mac still needs device testing; the current development Mac runs a newer macOS.

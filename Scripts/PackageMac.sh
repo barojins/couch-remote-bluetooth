@@ -3,7 +3,7 @@ set -euo pipefail
 
 project_root="$(cd "$(dirname "$0")/.." && pwd)"
 build_path="$project_root/build/distribution"
-output_path="$project_root/dist/CouchRemote-macOS14-universal.dmg"
+output_path="$project_root/dist/CouchRemote-macOS13-universal.dmg"
 staging_path="$(mktemp -d "${TMPDIR:-/tmp}/couchremote-package.XXXXXX")"
 trap 'rm -rf "$staging_path"' EXIT
 
@@ -28,7 +28,7 @@ ln -s /Applications "$staging_path/Applications"
 cat > "$staging_path/설치 안내.txt" <<'EOF'
 Couch Remote — Mac
 
-지원: macOS 14 Sonoma 이상, Intel 또는 Apple Silicon Mac.
+지원: macOS 13 Ventura 이상, Intel 또는 Apple Silicon Mac.
 Bluetooth LE 주변 기기 모드를 지원하는 Mac이 필요합니다.
 다른 Mac 모델에서의 실제 Bluetooth 동작은 아직 검증하지 않았습니다.
 

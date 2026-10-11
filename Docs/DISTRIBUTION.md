@@ -14,17 +14,17 @@
 
 ### 심사용 동작 설명
 
-이 앱은 macOS 14 이상에서 실행하는 별도의 CouchRemoteMac 수신 앱이 필요합니다. iOS 17 이상 실기기에서 Bluetooth를 켜고 Mac을 선택합니다. 운영체제 Bluetooth 코드를 확인해 페어링한 뒤 앱의 연결 코드를 양쪽 화면에서 확인하고 Mac에서 Allow control을 선택합니다. Mac의 Bluetooth 및 Accessibility 권한이 필요합니다. 한 손가락 이동/탭/더블탭, 두 손가락 우클릭/스크롤, 키보드 전송을 지원합니다. Mac companion 다운로드 URL과 설치 안내를 심사 정보에 제공하세요. Apple 심사 승인 여부는 보장되지 않습니다.
+이 앱은 macOS 13 이상에서 실행하는 별도의 CouchRemoteMac 수신 앱이 필요합니다. iOS 17 이상 실기기에서 Bluetooth를 켜고 Mac을 선택합니다. 운영체제 Bluetooth 코드를 확인해 페어링한 뒤 앱의 연결 코드를 양쪽 화면에서 확인하고 Mac에서 Allow control을 선택합니다. Mac의 Bluetooth 및 Accessibility 권한이 필요합니다. 한 손가락 이동/탭/더블탭, 두 손가락 우클릭/스크롤, 키보드 전송을 지원합니다. Mac companion 다운로드 URL과 설치 안내를 심사 정보에 제공하세요. Apple 심사 승인 여부는 보장되지 않습니다.
 
 ## Mac: Developer ID 서명 + 공증 DMG
 
 1. Xcode에서 **Developer ID Application** 인증서를 발급받습니다. Apple Development 인증서는 배포 공증용이 아닙니다.
 2. Apple 공식 notarytool 안내에 따라 Keychain credential profile을 만듭니다. 비밀번호를 파일이나 저장소에 저장하지 마세요.
 3. `DEVELOPER_ID_APPLICATION='Developer ID Application: Your Name (TEAMID)' NOTARY_PROFILE=couch-remote bash Scripts/NotarizeMac.sh`를 실행합니다.
-4. 공증 제출이 Accepted가 되고 stapler 검증까지 성공한 `dist/CouchRemote-macOS14-universal.dmg`만 사용자에게 배포합니다. 스크립트가 실패한 파일을 공증 완료로 표시하지 마세요.
+4. 공증 제출이 Accepted가 되고 stapler 검증까지 성공한 `dist/CouchRemote-macOS13-universal.dmg`만 사용자에게 배포합니다. 스크립트가 실패한 파일을 공증 완료로 표시하지 마세요.
 5. GitHub Releases에 이 DMG를 첨부할 수 있습니다. 이 저장소는 비공개이므로 접근 권한이 없는 사용자는 다운로드할 수 없습니다.
 
-최종 사용자는 Xcode 없이 DMG에서 Applications로 드래그해 설치합니다. 새 Mac마다 Bluetooth 및 Accessibility 권한 승인은 여전히 필요합니다. macOS 14 이상 / Intel 및 Apple Silicon 빌드이며, 다른 모델의 Bluetooth LE peripheral 지원과 동작은 실제 기기로 확인해야 합니다.
+최종 사용자는 Xcode 없이 DMG에서 Applications로 드래그해 설치합니다. 새 Mac마다 Bluetooth 및 Accessibility 권한 승인은 여전히 필요합니다. macOS 13 이상 / Intel 및 Apple Silicon 빌드이며, 다른 모델의 Bluetooth LE peripheral 지원과 동작은 실제 기기로 확인해야 합니다.
 
 ## 개인정보 및 검증
 
