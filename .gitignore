@@ -1,0 +1,17 @@
+.build/
+build/
+build-phone/
+build-device/
+dist/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+.DS_Store
+Config/Local.xcconfig
+.swiftpm/
+*.p12
+*.mobileprovision
+*.provisionprofile
+*.xcarchive/
+*.ipa
+.env*

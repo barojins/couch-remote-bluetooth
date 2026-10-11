@@ -1,0 +1,13 @@
+name: Build and test
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - run: swift test
+      - run: xcodebuild -quiet -project CouchRemote.xcodeproj -scheme CouchRemoteMac -configuration Release -destination 'generic/platform=macOS' 'ARCHS=arm64 x86_64' ONLY_ACTIVE_ARCH=NO CODE_SIGNING_ALLOWED=NO build
+      - run: xcodebuild -quiet -project CouchRemote.xcodeproj -scheme CouchRemotePhone -configuration Release -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
+      - run: for script in Scripts/*.sh; do bash -n "$script"; done
