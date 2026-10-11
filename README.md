@@ -5,7 +5,7 @@ An iPhone trackpad and keyboard for a Mac connected to a television. Native Swif
 ## What works in this first version
 
 - Discover the Mac from the iPhone app over Bluetooth.
-- Encrypted Bluetooth writes and notifications, plus explicit approval on the Mac for each connection. Compare the six-digit app code on both devices before allowing control; accept any separate system Bluetooth pairing prompts too.
+- Encrypted Bluetooth writes and notifications, plus one-time trust approval on the Mac. Compare the six-digit app code on both devices before allowing control; accept any separate system Bluetooth pairing prompts too.
 - One-finger pointer movement with speed-based acceleration, tap/click, and double-tap/double-click.
 - Two-finger tap for a context menu; two-finger sliding for pixel-based natural scrolling.
 - Movement and scrolling stream using encrypted writes without responses and Bluetooth backpressure. Clicks and keyboard commands remain ordered, acknowledged writes. The Mac requests low connection latency.
@@ -31,7 +31,7 @@ Requirements: Xcode with the iOS SDK, an iPhone running iOS 17 or later, and a M
 6. Select your Mac on the phone. Accept system pairing prompts, compare the six-digit code, and click **Allow control** on the Mac. The setup window hides so it does not retain keyboard focus.
 7. Move the pointer to your video app. For typing, first click its text/search field, open **Keyboard** on the phone, compose text, and tap the send arrow beside the text field. Direct keys act immediately on the Mac.
 
-The Mac receiver stays alive after closing its setup window. Use its mouse-shaped menu bar item to open setup, pause control, or quit. Only one phone can control it at a time. There is no stored app-level approval: reconnecting needs fresh approval.
+The Mac receiver stays alive after closing its setup window. Use its mouse-shaped menu bar item to open setup, pause control, or quit. Only one phone can control it at a time. The Mac remembers trusted iPhone identities after approval over an encrypted link. Reconnection does not ask for another code. Use **Forget** under Trusted iPhones to revoke access; the next connection then requires approval. Enable **Launch at login** to start the receiver automatically.
 
 Keep `LSUIElement` set to `NO`. On the tested Mac, running as a UI agent caused macOS to reject encrypted Bluetooth pairing with “no one to handle the request”; running as a regular app allowed the system pairing prompt and the connection to succeed. Commands and status notifications still require Bluetooth encryption.
 
@@ -65,7 +65,7 @@ Verification on October 10, 2026: the Mac and signed iPhone builds passed with X
 - Move across the Mac and TV displays, including negative display coordinates. Test clicking and double-clicking in Finder and the video app.
 - Test slow precise strokes and fast swipes, then click immediately after moving. Tap with two fingers to open a context menu without a left click. Slide with two fingers to scroll without moving the pointer, and lift both fingers before switching back to one-finger movement.
 - Type English, Korean, accented text, emoji, and a multiline string into TextEdit. Check Return, Space, Backspace, Escape, Tab, and arrow keys.
-- Turn Bluetooth off, move out of range, lock/background the phone, and pause the Mac receiver. Verify input stops and reconnection requires approval.
+- Turn Bluetooth off, move out of range, lock/background the phone, and pause the Mac receiver. Verify no queued input is replayed and the approved phone reconnects automatically when the app is opened. After Forget on the Mac, verify control is blocked until a new code is approved.
 - Interrupt a long text send. The original composer remains available on failure, but some text may already have arrived; check the Mac before retrying to avoid duplication.
 - Try connecting a second phone while the first is approved. It should report the receiver is busy.
 
@@ -74,10 +74,33 @@ Text entry uses Unicode keyboard events rather than clipboard access. Apps using
 ## Layout
 
 - `Shared/`: versioned command encoding and bounded UTF-8 text packetization.
-- `MacRemote/`: encrypted BLE peripheral, session approval, permission checks, Core Graphics input events, and menu bar UI.
+- `MacRemote/`: encrypted BLE peripheral, persistent phone trust, permission checks, Core Graphics input events, and menu bar UI.
 - `PhoneRemote/`: BLE discovery/connection, ordered acknowledged writes, motion coalescing, trackpad gestures, and keyboard UI.
 - `Tests/`: protocol tests that run without paired devices.
 
 No input is logged or persisted. The Mac app is intentionally not sandboxed because it posts system-wide input events; this is a local development build, not a notarized distribution or an App Store submission.
 
 Ventura compatibility update: the Mac deployment target is macOS 13.0, and both Intel and Apple Silicon binaries were rebuilt and checked. Actual execution on a Ventura Mac still needs device testing; the current development Mac runs a newer macOS.
+
+
+## Reconnecting (1.0.2)
+
+Update **both** the Mac and iPhone apps. Select your Mac on the iPhone once,
+compare the codes, and click **Trust this iPhone** on the Mac. The iPhone saves
+that Mac after approval and reconnects on later launches. The encrypted BLE
+connection is kept when the app backgrounds; queued input is discarded. If the
+link drops, foreground retries use a 1–30 second backoff. Out-of-range Macs have
+a pending Core Bluetooth connection that completes when available. **Choose
+another Mac** cancels that attempt and clears the saved Mac.
+
+The receiver must be running, Bluetooth on, and the Mac awake. iOS may suspend
+or terminate background apps, and force-quitting the iPhone app stops it until
+opened again; this does not guarantee an uninterrupted background connection.
+Reinstalling an app or resetting Bluetooth identities can require approval again.
+This is a native companion-app remote, not a system HID device with wake-from-sleep support.
+
+Validation: 18 automated protocol, motion, trust-persistence/revocation and retry
+policy tests; Mac universal and iPhone simulator builds. Real-device checks still
+required: lock/unlock, Bluetooth off/on, out of range/back, receiver restart,
+phone-app relaunch, and revocation. No physical iPhone/Ventura Bluetooth test is
+claimed by the build checks.

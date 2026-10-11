@@ -26,9 +26,16 @@ final class PhoneBluetoothClient: NSObject, ObservableObject, CBCentralManagerDe
     private var textCompletion: ((Bool) -> Void)?
     private var foreground = true
     private var pairing = PairingHandshake()
+    private let memory = ConnectionMemory()
+    private var reconnectPolicy = ReconnectPolicy()
+    private var reconnectTimer: Timer?
+    private var targetID: UUID?
+    private var targetName: String?
 
     override init() {
         super.init()
+        targetID = memory.macID
+        targetName = memory.macName
         manager = CBCentralManager(delegate: self, queue: .main)
     }
 
@@ -40,8 +47,12 @@ final class PhoneBluetoothClient: NSObject, ObservableObject, CBCentralManagerDe
         message = "Looking for your Mac… Open Couch Remote on the Mac."
     }
 
-    func connect(_ device: NearbyMac) {
+    func connect(_ device: NearbyMac, automatic: Bool = false) {
         guard peripheral == nil, manager.state == .poweredOn else { return }
+        targetID = device.id
+        targetName = device.name
+        if !automatic { reconnectPolicy.resume() }
+        reconnectTimer?.invalidate()
         manager.stopScan()
         isScanning = false
         peripheral = device.peripheral
@@ -50,29 +61,66 @@ final class PhoneBluetoothClient: NSObject, ObservableObject, CBCentralManagerDe
         message = "Connecting to \(device.name)…"
         device.peripheral.delegate = self
         manager.connect(device.peripheral)
-        startTimeout(seconds: 30, message: "Connection timed out. Keep the Mac nearby and try again.")
+        // Core Bluetooth keeps a pending connection until the remembered Mac returns.
+        // Discovery/pairing get their own deadlines after didConnect.
     }
 
-    func disconnect(message: String = "Disconnected. Select your Mac to reconnect.") {
+    func chooseDifferentMac() {
+        reconnectPolicy.pause()
+        reconnectTimer?.invalidate()
+        targetID = nil
+        targetName = nil
+        memory.forgetMac()
+        disconnect(message: "Select your Mac to connect.", retry: false)
+        scan()
+    }
+
+    private func reconnect() {
+        guard foreground, !reconnectPolicy.isPaused, manager.state == .poweredOn, peripheral == nil else { return }
+        if let id = targetID, let known = manager.retrievePeripherals(withIdentifiers: [id]).first {
+            connect(NearbyMac(peripheral: known, name: targetName ?? known.name ?? "Your Mac"), automatic: true)
+        } else { scan() }
+    }
+
+    private func scheduleReconnect() {
+        reconnectTimer?.invalidate()
+        guard let delay = reconnectPolicy.nextDelay(foreground: foreground,
+            poweredOn: manager.state == .poweredOn, hasTarget: targetID != nil) else { return }
+        reconnectTimer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in
+            self?.reconnect()
+        }
+    }
+
+    private func disconnect(message: String, retry: Bool = true) {
         let previous = peripheral
         reset()
         if let previous { manager.cancelPeripheralConnection(previous) }
         self.message = message
+        if retry { scheduleReconnect() }
     }
 
     func setForeground(_ active: Bool) {
         foreground = active
         if active {
-            if peripheral == nil { scan() }
+            if peripheral == nil { reconnect() }
+            else if peripheral?.state == .connected, isConnecting, approvalCode == nil {
+                startTimeout(seconds: 30, message: "Restoring the connection…")
+            }
         } else {
             manager.stopScan()
             isScanning = false
-            disconnect(message: "Connection closed while the app is in the background.")
+            reconnectTimer?.invalidate()
+            // Keep the encrypted link, but never replay gestures or queued text after unlock.
+            queue.removeAll()
+            isSendingText = false
+            let completion = textCompletion
+            textCompletion = nil
+            completion?(false)
         }
     }
 
     func send(_ command: RemoteCommand) {
-        guard isReady, !isSendingText else { return }
+        guard foreground, isReady, !isSendingText else { return }
         // Coalesce only adjacent motion, never across a click or key command.
         if let combined = queue.last?.coalesced(with: command) {
             queue[queue.count - 1] = combined
@@ -87,7 +135,7 @@ final class PhoneBluetoothClient: NSObject, ObservableObject, CBCentralManagerDe
     }
 
     func sendText(_ text: String, completion: @escaping (Bool) -> Void) {
-        guard isReady, !isSendingText, let peripheral,
+        guard foreground, isReady, !isSendingText, let peripheral,
               let commands = RemoteCommand.textCommands(text, maximumWriteLength: peripheral.maximumWriteValueLength(for: .withResponse)),
               !commands.isEmpty, queue.count + commands.count <= 512 else {
             message = "Send up to 4 KB of text at a time while connected."
@@ -163,7 +211,7 @@ final class PhoneBluetoothClient: NSObject, ObservableObject, CBCentralManagerDe
         devices.removeAll()
         isScanning = false
         switch central.state {
-        case .poweredOn: scan()
+        case .poweredOn: reconnect()
         case .poweredOff: message = "Turn on Bluetooth to connect to your Mac."
         case .unauthorized: message = "Allow Bluetooth for Couch Remote in iPhone Settings → Privacy & Security."
         case .unsupported: message = "Bluetooth LE is not supported on this device."
@@ -175,12 +223,18 @@ final class PhoneBluetoothClient: NSObject, ObservableObject, CBCentralManagerDe
                         advertisementData: [String: Any], rssi RSSI: NSNumber) {
         guard !devices.contains(where: { $0.id == peripheral.identifier }) else { return }
         let name = advertisementData[CBAdvertisementDataLocalNameKey] as? String ?? peripheral.name ?? "Nearby Mac"
-        devices.append(NearbyMac(peripheral: peripheral, name: name))
+        let device = NearbyMac(peripheral: peripheral, name: name)
+        devices.append(device)
+        if targetID == peripheral.identifier, !reconnectPolicy.isPaused {
+            connect(device, automatic: true)
+            return
+        }
         message = "Select your Mac to connect."
     }
 
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         guard peripheral === self.peripheral else { return }
+        startTimeout(seconds: 30, message: "Restoring the Bluetooth connection…")
         message = "Preparing secure Bluetooth connection…"
         peripheral.discoverServices([CBUUID(string: RemoteService.service)])
     }
@@ -194,7 +248,8 @@ final class PhoneBluetoothClient: NSObject, ObservableObject, CBCentralManagerDe
         guard peripheral === self.peripheral else { return }
         let partialText = isSendingText
         reset()
-        message = partialText ? "Disconnected. Text may be partially sent; check the Mac before retrying." : "Mac disconnected. Select it to reconnect."
+        message = partialText ? "Disconnected. Text may be partially sent; check the Mac before retrying." : "Waiting for your Mac. Reconnecting automatically…"
+        scheduleReconnect()
     }
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
@@ -271,11 +326,13 @@ final class PhoneBluetoothClient: NSObject, ObservableObject, CBCentralManagerDe
             isReady = false
             message = "Approve this code in Couch Remote on your Mac."
         case .ready:
+            rememberApprovedMac(peripheral)
             approvalCode = nil
             isReady = true
             message = "Connected over Bluetooth"
             flush()
         case .permissionNeeded:
+            rememberApprovedMac(peripheral)
             approvalCode = nil
             isReady = false
             queue.removeAll()
@@ -284,9 +341,16 @@ final class PhoneBluetoothClient: NSObject, ObservableObject, CBCentralManagerDe
             textCompletion = nil
             completion?(false)
             message = "Enable Accessibility access for CouchRemoteMac on the Mac."
-        case .denied: disconnect(message: "The Mac declined or paused remote control.")
+        case .denied:
+            reconnectPolicy.pause()
+            disconnect(message: "The Mac declined or paused control. Choose your Mac again to reconnect.", retry: false)
         case .busy: disconnect(message: "Another iPhone is connected. Disconnect it on the Mac first.")
         }
+    }
+
+    private func rememberApprovedMac(_ peripheral: CBPeripheral) {
+        memory.rememberMac(id: peripheral.identifier, name: connectedName ?? "Your Mac")
+        reconnectPolicy.connected()
     }
 
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {

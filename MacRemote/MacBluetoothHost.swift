@@ -8,6 +8,9 @@ final class MacBluetoothHost: NSObject, ObservableObject, CBPeripheralManagerDel
     @Published private(set) var hasPermission = false
     @Published private(set) var isEnabled = true
 
+    @Published private(set) var trustedPhones: [UUID] = []
+    private let memory = ConnectionMemory()
+
     private var manager: CBPeripheralManager!
     private var commandCharacteristic: CBMutableCharacteristic?
     private var statusCharacteristic: CBMutableCharacteristic?
@@ -18,6 +21,7 @@ final class MacBluetoothHost: NSObject, ObservableObject, CBPeripheralManagerDel
 
     override init() {
         super.init()
+        trustedPhones = memory.trustedPhones
         hasPermission = input.hasPermission
         manager = CBPeripheralManager(delegate: self, queue: .main)
         permissionTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
@@ -35,11 +39,21 @@ final class MacBluetoothHost: NSObject, ObservableObject, CBPeripheralManagerDel
 
     func approve() {
         guard approvalCode != nil, let central else { return }
+        memory.trust(central.identifier)
+        trustedPhones = memory.trustedPhones
         isApproved = true
         approvalCode = nil
         hasPermission = input.hasPermission
         message = "iPhone connected"
         send(hasPermission ? .ready : .permissionNeeded, to: central)
+    }
+
+    func forgetPhone(_ id: UUID) {
+        memory.forget(id)
+        trustedPhones = memory.trustedPhones
+        if central?.identifier == id {
+            deny()
+        }
     }
 
     func deny() {
@@ -129,6 +143,13 @@ final class MacBluetoothHost: NSObject, ObservableObject, CBPeripheralManagerDel
         }
         self.central = central
         peripheral.setDesiredConnectionLatency(.low, for: central)
+        if memory.trustedPhones.contains(central.identifier) {
+            isApproved = true
+            approvalCode = nil
+            message = "iPhone connected"
+            send(input.hasPermission ? .ready : .permissionNeeded, to: central)
+            return
+        }
         let code = String(format: "%06d", Int.random(in: 0...999999))
         approvalCode = code
         isApproved = false

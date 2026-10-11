@@ -14,7 +14,7 @@
 
 ### 심사용 동작 설명
 
-이 앱은 macOS 13 이상에서 실행하는 별도의 CouchRemoteMac 수신 앱이 필요합니다. iOS 17 이상 실기기에서 Bluetooth를 켜고 Mac을 선택합니다. 운영체제 Bluetooth 코드를 확인해 페어링한 뒤 앱의 연결 코드를 양쪽 화면에서 확인하고 Mac에서 Allow control을 선택합니다. Mac의 Bluetooth 및 Accessibility 권한이 필요합니다. 한 손가락 이동/탭/더블탭, 두 손가락 우클릭/스크롤, 키보드 전송을 지원합니다. Mac companion 다운로드 URL과 설치 안내를 심사 정보에 제공하세요. Apple 심사 승인 여부는 보장되지 않습니다.
+이 앱은 macOS 13 이상에서 실행하는 별도의 CouchRemoteMac 수신 앱이 필요합니다. iOS 17 이상 실기기에서 Bluetooth를 켜고 Mac을 선택합니다. 운영체제 Bluetooth 코드를 확인해 페어링한 뒤 앱의 연결 코드를 양쪽 화면에서 확인하고 Mac에서 Trust this iPhone을 선택합니다. 이후 승인된 iPhone은 자동 재연결됩니다. Mac의 Bluetooth 및 Accessibility 권한이 필요합니다. 한 손가락 이동/탭/더블탭, 두 손가락 우클릭/스크롤, 키보드 전송을 지원합니다. Mac companion 다운로드 URL과 설치 안내를 심사 정보에 제공하세요. Apple 심사 승인 여부는 보장되지 않습니다.
 
 ## Mac: Developer ID 서명 + 공증 DMG
 
@@ -28,6 +28,6 @@
 
 ## 개인정보 및 검증
 
-명령·입력 텍스트는 저장하거나 로그로 남기지 않습니다. 링크 암호화와 Mac의 매 연결 승인, 입력 권한 확인은 유지됩니다. 자동 테스트는 패킷/페어링 상태/이동 변환을 검증하며 실제 Bluetooth, 제스처 느낌, 다른 Mac 호환성이나 App Review를 대체하지 않습니다.
+명령·입력 텍스트는 저장하거나 로그로 남기지 않습니다. 링크 암호화와 최초 신뢰 승인, 입력 권한 확인은 유지됩니다. 승인한 iPhone의 Core Bluetooth 식별자는 Mac에 저장되며 Forget으로 철회할 수 있습니다. iPhone에는 마지막으로 승인받은 Mac의 식별자와 이름을 저장합니다. 자동 테스트는 패킷/페어링 상태/이동 변환을 검증하며 실제 Bluetooth, 제스처 느낌, 다른 Mac 호환성이나 App Review를 대체하지 않습니다.
 
 공식 문서: [멤버십](https://developer.apple.com/support/compare-memberships/), [TestFlight](https://developer.apple.com/testflight/), [Developer ID](https://developer.apple.com/developer-id/), [공증](https://developer.apple.com/documentation/security/customizing-the-notarization-workflow).

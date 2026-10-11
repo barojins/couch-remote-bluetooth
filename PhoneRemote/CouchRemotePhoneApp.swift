@@ -54,7 +54,7 @@ private struct RemoteView: View {
                             .frame(maxWidth: .infinity).padding(.vertical, 10)
                     }
                     .buttonStyle(.bordered).disabled(!client.isReady)
-                    Button("Disconnect") { client.disconnect() }
+                    Button("Choose another Mac") { client.chooseDifferentMac() }
                         .font(.footnote).foregroundStyle(.secondary)
                 }
             }

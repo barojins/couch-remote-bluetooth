@@ -73,7 +73,7 @@ private struct MacSetupView: View {
                         Text(code).font(.system(size: 34, weight: .semibold, design: .monospaced))
                         HStack {
                             Button("Decline") { host.deny() }
-                            Button("Allow control") {
+                            Button("Trust this iPhone") {
                                 host.approve()
                                 if host.hasPermission { NSApplication.shared.hide(nil) }
                             }.buttonStyle(.borderedProminent)
@@ -90,8 +90,20 @@ private struct MacSetupView: View {
                         .font(.callout).foregroundStyle(.secondary)
                     Button("Grant Accessibility access") { host.requestPermission() }
                 }
-                Text("Open Couch Remote on your iPhone and select this Mac. Each new connection requires approval here. Close this window to keep the receiver in the menu bar.")
+                Text("Open Couch Remote on your iPhone and select this Mac. Approve your iPhone once; trusted phones reconnect automatically. Close this window to keep the receiver in the menu bar.")
                     .font(.callout).foregroundStyle(.secondary)
+                LoginItemView()
+                if !host.trustedPhones.isEmpty {
+                    Divider()
+                    Text("Trusted iPhones").font(.headline)
+                    ForEach(host.trustedPhones, id: \.self) { id in
+                        HStack {
+                            Text("iPhone · \(id.uuidString.prefix(8))").font(.callout)
+                            Spacer()
+                            Button("Forget") { host.forgetPhone(id) }
+                        }
+                    }
+                }
                 Button(host.isEnabled ? "Pause remote control" : "Resume remote control") { host.toggleEnabled() }
             }
             .padding(28).frame(width: 420)

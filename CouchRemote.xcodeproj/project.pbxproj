@@ -7,30 +7,36 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		14CBECA2FCF1B9DFB246543A /* LoginItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546B9DD4100C3BA0AC0D104 /* LoginItem.swift */; };
 		2649AB77EF70C3ECFC8B9A0B /* MacBluetoothHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99A680BF113F877C8144C125 /* MacBluetoothHost.swift */; };
 		525B8AD9A77F0F39435D3CFC /* CouchRemotePhoneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D506C1294D1E1F6B6BCD18C /* CouchRemotePhoneApp.swift */; };
 		5A0B668C3F2569A168A7B559 /* RemoteCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455D7ACCE0A560B130379D0C /* RemoteCommand.swift */; };
 		72ED38DD302816E80BE5A7A5 /* TrackpadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3399021D7DFABDE877AF6580 /* TrackpadView.swift */; };
+		840474EB36648518976FF44C /* ConnectionMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FFB509CB90678450785957E /* ConnectionMemory.swift */; };
 		881C65AE978C91D1D1469BE4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 644986B2EA9EACE746A9126E /* Assets.xcassets */; };
 		90572B77BC8F0D44776C606F /* RemoteCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455D7ACCE0A560B130379D0C /* RemoteCommand.swift */; };
 		90EF46D758F25FB90E18430D /* InputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A098A6975E922331A97CFA6 /* InputController.swift */; };
 		BE396C133A9BF5A59657A176 /* PhoneBluetoothClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DB8B129858F0A29F19C602 /* PhoneBluetoothClient.swift */; };
 		F573F9262246D77A889B5D78 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59C31D5092802D3796874A82 /* Assets.xcassets */; };
+		F90CA19E5B378F92078833EF /* ConnectionMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FFB509CB90678450785957E /* ConnectionMemory.swift */; };
 		FD7184D2A14EC8B3F8FF16F9 /* CouchRemoteMacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14467834FD41E3F952EB0C3 /* CouchRemoteMacApp.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2A098A6975E922331A97CFA6 /* InputController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputController.swift; sourceTree = "<group>"; };
 		3399021D7DFABDE877AF6580 /* TrackpadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackpadView.swift; sourceTree = "<group>"; };
+		3513005F9732216A2A85758F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		455D7ACCE0A560B130379D0C /* RemoteCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommand.swift; sourceTree = "<group>"; };
 		4D506C1294D1E1F6B6BCD18C /* CouchRemotePhoneApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CouchRemotePhoneApp.swift; sourceTree = "<group>"; };
 		522195ED434BA37B88905EA9 /* CouchRemoteMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CouchRemoteMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		534126A96D0511A61F2C1F76 /* CouchRemotePhone.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CouchRemotePhone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		59C31D5092802D3796874A82 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5FFB509CB90678450785957E /* ConnectionMemory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionMemory.swift; sourceTree = "<group>"; };
 		644986B2EA9EACE746A9126E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		67352F0C2B228EE7A9C9ECFF /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
 		99A680BF113F877C8144C125 /* MacBluetoothHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacBluetoothHost.swift; sourceTree = "<group>"; };
 		A14467834FD41E3F952EB0C3 /* CouchRemoteMacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CouchRemoteMacApp.swift; sourceTree = "<group>"; };
+		B546B9DD4100C3BA0AC0D104 /* LoginItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginItem.swift; sourceTree = "<group>"; };
 		C9DB8B129858F0A29F19C602 /* PhoneBluetoothClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneBluetoothClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -48,6 +54,7 @@
 			children = (
 				644986B2EA9EACE746A9126E /* Assets.xcassets */,
 				4D506C1294D1E1F6B6BCD18C /* CouchRemotePhoneApp.swift */,
+				3513005F9732216A2A85758F /* Info.plist */,
 				C9DB8B129858F0A29F19C602 /* PhoneBluetoothClient.swift */,
 				3399021D7DFABDE877AF6580 /* TrackpadView.swift */,
 			);
@@ -71,6 +78,7 @@
 				59C31D5092802D3796874A82 /* Assets.xcassets */,
 				A14467834FD41E3F952EB0C3 /* CouchRemoteMacApp.swift */,
 				2A098A6975E922331A97CFA6 /* InputController.swift */,
+				B546B9DD4100C3BA0AC0D104 /* LoginItem.swift */,
 				99A680BF113F877C8144C125 /* MacBluetoothHost.swift */,
 			);
 			path = MacRemote;
@@ -88,6 +96,7 @@
 		FA6D833D7CFEF4376861CBE0 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				5FFB509CB90678450785957E /* ConnectionMemory.swift */,
 				455D7ACCE0A560B130379D0C /* RemoteCommand.swift */,
 			);
 			path = Shared;
@@ -193,6 +202,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F90CA19E5B378F92078833EF /* ConnectionMemory.swift in Sources */,
 				525B8AD9A77F0F39435D3CFC /* CouchRemotePhoneApp.swift in Sources */,
 				BE396C133A9BF5A59657A176 /* PhoneBluetoothClient.swift in Sources */,
 				5A0B668C3F2569A168A7B559 /* RemoteCommand.swift in Sources */,
@@ -204,8 +214,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				840474EB36648518976FF44C /* ConnectionMemory.swift in Sources */,
 				FD7184D2A14EC8B3F8FF16F9 /* CouchRemoteMacApp.swift in Sources */,
 				90EF46D758F25FB90E18430D /* InputController.swift in Sources */,
+				14CBECA2FCF1B9DFB246543A /* LoginItem.swift in Sources */,
 				2649AB77EF70C3ECFC8B9A0B /* MacBluetoothHost.swift in Sources */,
 				90572B77BC8F0D44776C606F /* RemoteCommand.swift in Sources */,
 			);
@@ -221,6 +233,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PhoneRemote/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Couch Remote";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Connect to your Mac to use your iPhone as a trackpad and keyboard.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -287,6 +300,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PhoneRemote/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Couch Remote";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Connect to your Mac to use your iPhone as a trackpad and keyboard.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -341,7 +355,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				COUCH_REMOTE_BUNDLE_PREFIX = com.couchremote;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -361,7 +375,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -409,7 +423,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				COUCH_REMOTE_BUNDLE_PREFIX = com.couchremote;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -423,7 +437,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
